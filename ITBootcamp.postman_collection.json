@@ -1,0 +1,2993 @@
+{
+	"info": {
+		"_postman_id": "c1fdef26-8bd2-4f21-b1b8-693b1f1d93b8",
+		"name": "ITBootcamp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth testovi",
+			"item": [
+				{
+					"name": "/",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dc43d206-16aa-44e9-9f10-361ff03c8b71",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/register1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74d59760-64b9-4742-9d33-147f23c6bd30",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if errors contains the property msg with value EMAIL_ALREADY_EXISTS\", function () {\r",
+									"    pm.expect(pm.response.json().errors).to.have.property('msg').to.eql(\"EMAIL_ALREADY_EXISTS\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "admin@admin.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "Testiranje registracije sa postojecim email-om."
+					},
+					"response": []
+				},
+				{
+					"name": "/register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6cb42638-fa0d-4059-8316-d332c0201def",
+								"exec": [
+									"let ok = pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"user_id\", jsonData.user._id);\r",
+									"    pm.environment.set(\"token\", jsonData.token)\r",
+									"}\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property user\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('user');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "79b2d3f4-c5ff-40e0-8418-95d1545c5884",
+								"exec": [
+									"let email=_.random(1000)+\"@domain.com\";\r",
+									" pm.environment.set(\"randomEmail\",email);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Jelena",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "304aceb4-42b3-4375-97c5-e50df06bd0a0",
+								"exec": [
+									"let ok = pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"verification\", jsonData.verification)\r",
+									"\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "055d0cf7-4f59-4195-a1ea-0336fb1acccf",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"pm.test(\"Check if object contains the property email\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('email');\r",
+									"});\r",
+									"pm.test(\"Check if object contains the property verified\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('verified').to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "{{verification}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/verify",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e52e9e54-da7e-4891-a667-5aae6c589bae",
+								"exec": [
+									"let ok = pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"token\", jsonData.token)\r",
+									"\r",
+									"}\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property user\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('user');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/forgot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7c1c5b7c-4f6e-4325-b331-a0a7c3e55ceb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property msg\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('msg');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property email\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('email');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\n\t\"email\": \"{{randomEmail}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/forgot",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/register2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e28e66c5-f5d2-4556-84c8-84f58f7f9572",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property user\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('user');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4965822d-d1cf-4193-866a-8584a24cb2f5",
+								"exec": [
+									"let email=_.random(1000)+\"@domain.com\";\r",
+									" pm.environment.set(\"randomEmail\",email);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Jelena",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "jnejkovic@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "Registrujem se sa svojim mailom kako bih resetovala password."
+					},
+					"response": []
+				},
+				{
+					"name": "/forgot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b08fcc47-c502-46a5-97b9-40f8961a2b09",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property msg\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('msg');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property email\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('email');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "jnejkovic@gmail.com",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/forgot",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"forgot"
+							]
+						},
+						"description": "Forgot za moj mail kako bih resetovala password."
+					},
+					"response": []
+				},
+				{
+					"name": "/reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3e3cff77-0560-4742-8e06-b500e63515ac",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property msg with value PASSWORD_CHANGED\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('msg').to.eql(\"PASSWORD_CHANGED\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "b9232178-f12e-4ec3-9a01-fb321d3e62c8",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/reset",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "afb582b1-6c43-49e1-9388-45fc2bb0323a",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "text",
+									"disabled": true
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"token"
+							]
+						},
+						"description": "Testiranje api poziva slanjem tokena."
+					},
+					"response": []
+				},
+				{
+					"name": "/token1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4f49db5f-729f-430d-add1-887315496ed2",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"token"
+							]
+						},
+						"description": "Testiranje api poziva u kom se ne salje token."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "city testovi",
+			"item": [
+				{
+					"name": "/login_valid_user ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e5f9fad1-ba4c-44e5-9eb4-e33fed87580a",
+								"exec": [
+									"let ok = pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"admin_token\", jsonData.token)\r",
+									"\r",
+									"}\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "{{name}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{email}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Testiranje prijavljivanja sa validnim podacima za prijavu"
+					},
+					"response": []
+				},
+				{
+					"name": "/cities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "68c1873c-7d8d-4aba-a7ac-25aaa36eecee",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/cities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities"
+							]
+						},
+						"description": "Testiranje api poziva u kom se ne salje token."
+					},
+					"response": []
+				},
+				{
+					"name": "/cities1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3286b71c-4646-40e4-abb4-2cb4059fecec",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property docs which is array\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('docs').to.be.an('array');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/cities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token."
+					},
+					"response": []
+				},
+				{
+					"name": "/cities?filter=Bucaramanga&fields=name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bbefb78e-7f5e-4aab-a622-0611c19c2038",
+								"exec": [
+									"let ok = pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"city_id\", jsonData.docs[0]._id)\r",
+									"\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if property docs is array\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('docs').to.be.an('array').to.have.lengthOf(1);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if dosc[0] has a name value Bucaramanga\", function () {\r",
+									"    pm.expect(pm.response.json().docs[0]).to.have.property('name').to.eql(\"Bucaramanga\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/cities?filter=Bucaramanga&fields=name",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "Bucaramanga"
+								},
+								{
+									"key": "fields",
+									"value": "name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/cities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9ffd4974-075c-417f-9580-5df7bc97f72d",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token, a za city se ne salje name."
+					},
+					"response": []
+				},
+				{
+					"name": "/cities ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "09d01d52-8eb6-40fd-8f79-f48c526285e8",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Bucaramanga",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token i ime vec postojeceg grada."
+					},
+					"response": []
+				},
+				{
+					"name": "/cities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b9c70436-890c-43e6-8abf-f733d77b76cf",
+								"exec": [
+									"let ok = pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"delete_city_id\", jsonData._id)\r",
+									"\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property name\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('name');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property id\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('_id');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Smederevo",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token i name."
+					},
+					"response": []
+				},
+				{
+					"name": "/cities/{id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9786014f-894b-449b-a2be-ec6d267af9a0",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property name\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('name');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property id which is the same as sended id\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('_id').to.eql(pm.environment.get('delete_city_id'));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e6044faa-c908-4099-b7b8-0252ea4be28b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "{{city_id}}",
+									"type": "text",
+									"disabled": true
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cities/{{delete_city_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities",
+								"{{delete_city_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/cities/{id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b820a366-59ff-4c78-b858-8821705306b2",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"pm.test(\"Check if object contains the property id which is the same as sended id\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('_id').to.eql(pm.environment.get('delete_city_id'));\r",
+									"});\r",
+									"pm.test(\"Check if object contains the property name which is the same as sended name\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('name').to.eql(\"Bor\");\r",
+									"    pm.get\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Bor",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cities/{{delete_city_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities",
+								"{{delete_city_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/cities/{id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "409550cf-e5c2-433a-9187-b0fa73918e2c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property msg with valuse DELETED\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('msg').to.eql(\"DELETED\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cities/{{delete_city_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cities",
+								"{{delete_city_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "profile testovi",
+			"item": [
+				{
+					"name": "/register ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "894d6508-6295-41f1-9aa0-ce400e35a4bb",
+								"exec": [
+									"let ok = pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"user_id\", jsonData.user._id);\r",
+									"    pm.environment.set(\"token\", jsonData.token)\r",
+									"}\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property user\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('user');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "576b1c97-9e8e-48fa-a291-2a35c7c7410f",
+								"exec": [
+									"let email=_.random(1000)+\"@domain.com\";\r",
+									" pm.environment.set(\"randomEmail\",email);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Jelena",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "588c21da-d289-4c11-8141-60fe222e1f5b",
+								"exec": [
+									"let ok = pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"token\", jsonData.token)\r",
+									"\r",
+									"}\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "{{randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a410e53a-2174-4c1e-bfa2-03e639213cfc",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "Testiranje api poziva u kom se ne salje token."
+					},
+					"response": []
+				},
+				{
+					"name": "/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3c519caf-3c1e-43ab-a25c-ca71cc759382",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property email\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('email');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property name\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('name');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token."
+					},
+					"response": []
+				},
+				{
+					"name": "/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2a3dfe75-cebe-4825-a277-6a6e008457f7",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Test123456",
+									"type": "text"
+								},
+								{
+									"key": "urlTwitter ",
+									"value": "https://hello.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "123123123",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Bucaramanga",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "Colombia",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token i ostali podaci."
+					},
+					"response": []
+				},
+				{
+					"name": "/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ddfc8acc-19f7-40c9-98c2-09ee990818bd",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token. Email i name su prazni."
+					},
+					"response": []
+				},
+				{
+					"name": "/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1a462e7a-88ea-420d-b92e-453e86ec264a",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "programmer@programmer.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token i email koji vec postoji."
+					},
+					"response": []
+				},
+				{
+					"name": "/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c9ee0e1c-980a-4e4d-bd2f-ff38fd92f248",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if property errors have property msg\", function () {\r",
+									"    pm.expect(pm.response.json().errors).to.have.property('msg').to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if msg[0] equal NOT_A_VALID_URL\", function () {\r",
+									"    pm.expect(pm.response.json().errors.msg[0]).to.have.property('msg').to.eql(\"NOT_A_VALID_URL\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/profile?name=Test123456&urlTwitter=hello&urlGitHub=hello&phone=123123123&city=Bucaramanga&country=Colombia",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Test123456"
+								},
+								{
+									"key": "urlTwitter",
+									"value": "hello"
+								},
+								{
+									"key": "urlGitHub",
+									"value": "hello"
+								},
+								{
+									"key": "phone",
+									"value": "123123123"
+								},
+								{
+									"key": "city",
+									"value": "Bucaramanga"
+								},
+								{
+									"key": "country",
+									"value": "Colombia"
+								}
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token i url koji nije validan."
+					},
+					"response": []
+				},
+				{
+					"name": "/profile/changePassword",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c19f1a-b487-4472-8f59-a5f4bbd1979f",
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});\r",
+									"pm.test(\"Check if errors contains the msg with value WRONG_PASSWORD\", function () {\r",
+									"    pm.expect(pm.response.json().errors).to.have.property('msg').to.eql(\"WRONG_PASSWORD\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "12345",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/profile/changePassword",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile",
+								"changePassword"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token i kao oldPassword se salje nevazeci password."
+					},
+					"response": []
+				},
+				{
+					"name": "/profile/changePassword ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1809464b-68ea-44d2-8c5c-f69f3d6fe3d6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"pm.test(\"Check if object contains the property msg with value PASSWORD_CHANGED\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('msg').to.eql(\"PASSWORD_CHANGED\");\r",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/profile/changePassword",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile",
+								"changePassword"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token. Salju se validne lozinke."
+					},
+					"response": []
+				},
+				{
+					"name": "/profile/changePassword ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1b1db15f-5234-42d4-a0d2-e9c3471b5728",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"    });\r",
+									"pm.test(\"Check if property errors have property msg\", function () {\r",
+									"    pm.expect(pm.response.json().errors).to.have.property('msg').to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if msg[0] equal PASSWORD_TOO_SHORT_MIN_5\", function () {\r",
+									"    pm.expect(pm.response.json().errors.msg[0]).to.have.property('msg').to.eql(\"PASSWORD_TOO_SHORT_MIN_5\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/profile/changePassword",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile",
+								"changePassword"
+							]
+						},
+						"description": "Testiranje api poziva u kom se salje token. \r\nNovi password treba da ima manje od 5 karaktera.\r\n"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "user testovi",
+			"item": [
+				{
+					"name": "/login_valid_user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1d3fcb89-7f49-4940-8865-5438c698c2c5",
+								"exec": [
+									"let ok = pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"admin_token\", jsonData.token)\r",
+									"\r",
+									"}\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('token');\r",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "{{name}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{email}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Testiranje prijavljivanja sa validnim podacima za prijavu"
+					},
+					"response": []
+				},
+				{
+					"name": "/login_valid_user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "751f8237-96dc-4495-ad65-c5b43c005e2e",
+								"exec": [
+									"let ok = pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"user_token\", jsonData.token)\r",
+									"\r",
+									"}\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if object contains the property token\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('token');\r",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "user@user.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "user",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Salju se user podaci. (Sacuvati token sa responsa u user token)"
+					},
+					"response": []
+				},
+				{
+					"name": "/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c097ec44-5e85-4101-b5fa-10e2ec64cc65",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Ne salje se token."
+					},
+					"response": []
+				},
+				{
+					"name": "/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4f06cfeb-83e3-4fc3-a6f0-db6daa67f97e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"pm.test(\"Check if property docs is array\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('docs').to.be.an('array');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Salje se admin token."
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}/users?filter=admin&fields=name,email,city,country,phone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ca8e3fa3-2b3e-470a-bcc2-800fa0e9eb55",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"pm.test(\"Check if property docs is array\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('docs').to.be.an('array').to.have.lengthOf(1);\r",
+									"});\r",
+									"pm.test(\"Check if property docs is array with length 1\", function () {\r",
+									"    pm.expect(pm.response.json().docs).to.have.lengthOf(1);\r",
+									"});\r",
+									"pm.test(\"Check if dosc[0] has a name value Bucaramanga\", function () {\r",
+									"    pm.expect(pm.response.json().docs[0]).to.have.property('email').to.eql(\"admin@admin.com\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users?filter=admin&fields=name,email,city,country,phone",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "admin"
+								},
+								{
+									"key": "fields",
+									"value": "name,email,city,country,phone"
+								}
+							]
+						},
+						"description": "Salje se admin token."
+					},
+					"response": []
+				},
+				{
+					"name": "/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "68c5657f-1d09-40f7-94a3-83dad01277ba",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Salje se admin token i user bez name-a."
+					},
+					"response": []
+				},
+				{
+					"name": "/users ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aedec640-baf5-4ead-b676-dac969dd17cd",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\n            \"name\": \"Jelena\",\n            \"email\": \"user@user.com\",\n            \"password\": \"123456\",\n            \"role\": \"user\",\n            \"city\": \"Belgrade\",\n            \"country\": \"Serbia\",\n            \"phone\": \"123123123\"\n        }\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Salje se admin token.\r\nSalje se user sa emailom koji vec postoji u bazi.\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f2f0f26f-0c8c-4e0a-88df-7335dce23271",
+								"exec": [
+									"let ok = pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"if (ok) {\r",
+									"    let jsonData = JSON.parse(responseBody);\r",
+									"    pm.environment.set(\"valid_user_id\", jsonData._id)\r",
+									"\r",
+									"}\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if object contains the property id\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('_id');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if object contains the property name\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('name');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if object contains the property email\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('email');\r",
+									"    });\r",
+									"pm.test(\"Check if object contains the property verification\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('verification');\r",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n\t    {\n            \"name\": \"Jelena\",\n            \"email\": \"{{userEmail}}\",\n            \"password\": \"123456\",\n            \"role\": \"user\",\n            \"city\": \"Belgrade\",\n            \"country\": \"Serbia\",\n            \"phone\": \"123123123\"\n        }\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Salje se admin token.\r\nSalje se validan user objekat.\r\n(Sacuvati id usera, za kasnije)\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "/users ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "44eca026-da24-4680-90c4-80b728f0af0b",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n\t    {\n            \"name\": \"Jelena\",\n            \"email\": \"{{randomEmail}}\",\n            \"password\": \"123456\",\n            \"city\": \"Belgrade\",\n            \"country\": \"Serbia\",\n            \"phone\": \"123123123\"\n        }\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Salje se admin token. \r\nValidne role su “admin” i “user”.\r\nNe moze se kreirati user bez parametra role.\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "/users/{id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "637da74b-cd88-4cf8-b08a-e09a5b5e52ba",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if object contains the property name\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('name');\r",
+									"    });\r",
+									"pm.test(\"Check if object contains the property id which is the same as sended id\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('_id').to.eql(pm.environment.get('valid_user_id'));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "{{valid_user_id}}",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/users/{{valid_user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{valid_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/{id}",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0ea10f64-06bf-487f-8f2e-3c38e6424117",
+								"exec": [
+									"let email = _.random(1000) + \"@domain.com\";\r",
+									"pm.environment.set(\"userEmail\", email);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "c1884c97-dac6-4715-9e20-497fecef2c72",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"pm.test(\"Check if object contains the property id which is the same as sended id\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('_id').to.eql(pm.environment.get('valid_user_id'));\r",
+									"});\r",
+									"pm.test(\"Check if object contains the property name which is the same as sended name\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('name').to.eql(\"Tralala\");\r",
+									"});\r",
+									"pm.test(\"Check if object contains the property email which is the same as sended email\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('email').to.eql(pm.environment.get('userEmail'));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n            \n            \"name\": \"Tralala\",\n            \"email\": \"{{userEmail}}\",\n            \"password\": \"123456\",\n            \"role\": \"user\",\n            \"city\": \"Belgrade\",\n            \"country\": \"Serbia\",\n            \"phone\": \"123123123\"\n        }\n\t",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/{{valid_user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{valid_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/{id} Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "909394af-9a34-4f49-a9a5-0caf63c8023f",
+								"exec": [
+									"let email = _.random(1000) + \"@domain.com\";\r",
+									"pm.environment.set(\"userEmail\", email);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "66a6a113-799d-4fec-bbc3-0172ae8f9bbc",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"     pm.expect(pm.response).to.be.an('object');\r",
+									"    });\r",
+									"\r",
+									"pm.test(\"Check if object contains the property errors\", function () {\r",
+									"     pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n            \n            \"name\": \"Tralala\",\n            \"email\": \"admin@admin.com\",\n            \"password\": \"123456\",\n            \"role\": \"user\",\n            \"city\": \"Belgrade\",\n            \"country\": \"Serbia\",\n            \"phone\": \"123123123\"\n        }\n\t",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/{{valid_user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{valid_user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/{id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "de0f8710-4547-472b-b3e1-ddad64edaba9",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Check if responseBody is an object\", function () {\r",
+									"    pm.expect(pm.response).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if object contains the property msg with value DELETED\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('msg').to.eql(\"DELETED\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/{{valid_user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{valid_user_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bdf09a09-7973-42ef-8ce1-334303217d57",
+						"type": "text/javascript",
+						"exec": [
+							"let email = _.random(1000) + \"@domain.com\";",
+							"pm.environment.set(\"userEmail\", email);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0fe3d5ee-2a67-4ca1-b493-84af6359d745",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
